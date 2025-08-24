@@ -1,17 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  createProduct,
-  getProducts,
-  updateProduct,
-  deleteProduct
-} = require('../controllers/productController');
+const productController = require('../controllers/productController');
 const auth = require('../middleware/auth');
-const upload = require('../middleware/upload');
 
-router.post('/', auth, upload.single('image'), createProduct);
-router.get('/', getProducts);
-router.put('/:id', auth, updateProduct);
-router.delete('/:id', auth, deleteProduct);
+// @route   POST /api/products
+// @desc    Criar um novo produto (apenas para usuários autenticados, o controlador verificará o role)
+// @access  Private
+router.post('/', auth, productController.createProduct);
+
+// @route   GET /api/products
+// @desc    Listar todos os produtos (pode ser acessado por qualquer um)
+// @access  Public
+router.get('/', productController.getProducts);
+
+// @route   PUT /api/products/:id
+// @desc    Atualizar um produto (apenas pelo restaurante dono do produto)
+// @access  Private
+router.put('/:id', auth, productController.updateProduct);
+
+// @route   DELETE /api/products/:id
+// @desc    Deletar um produto (apenas pelo restaurante dono do produto)
+// @access  Private
+router.delete('/:id', auth, productController.deleteProduct);
 
 module.exports = router;

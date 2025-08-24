@@ -2,13 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./src/config/db');
-
 const app = express();
+const path = require('path');
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: 'http://192.168.0.3:8081', // IP do seu Expo ou frontend
+    origin: 'http://192.168.18.23:8081', // IP do seu Expo ou frontend
     credentials: true,
 }));
 

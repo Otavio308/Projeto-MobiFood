@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const authController = require('../controllers/authController');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
@@ -51,7 +52,12 @@ router.get('/me', async (req, res) => {
     
     if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
     
-    res.status(200).json(user);
+    const userObj = user.toObject();
+    if (userObj.profileImage) {
+      userObj.profileImage = `${req.protocol}://${req.get('host')}/${user.profileImage}`;
+    }
+    res.status(200).json(userObj);
+
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar usuário' });
   }
